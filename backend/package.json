@@ -1,0 +1,22 @@
+{
+  "name": "turbo",
+  "version": "1.0.0",
+  "description": "crud app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "author": "Semyon Titarenko @MakTakin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.5.0",
+    "uuid": "^8.3.2"
+  }
+}
