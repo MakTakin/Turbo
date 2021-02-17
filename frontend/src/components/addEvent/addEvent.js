@@ -1,30 +1,38 @@
 import React, { useState } from 'react'
-import Form from '../form/form';
 import { SERVER_URL } from '../../settings/constants';
+import Form from '../form/form';
 
 const AddEvent = (props) => {
     const [event, setEvent] = useState({
         username: '',
         firstname: '',
         lastname: '',
-        user_id: '',
+        id: '',
         event_name: 'site',
-        event: {
-            event_time: ''
-        }
+        event_time: '',
+        error: ''
     })
 
     const onChange = (e) => {
-        const newEvent = { ...event }
+        const newEvent = { ...event, error: '' }
         newEvent[e.target.name] = e.target.value
-        if (e.target.name == 'event') {
-            newEvent[e.target.name].event_time = e.target.value
-        }
         setEvent(newEvent)
+    }
+
+    const validation = (id) => {
+        const FormValid = id > 0 && id < 10 ? true : false
+        if (!FormValid) {
+            const error = 'Введите id от 1 до 10'
+            setEvent({ ...event, error })
+        }
+        return FormValid
     }
 
     const saveEvent = async (e) => {
         e.preventDefault()
+        if (!validation(event.id)) {
+            return
+        }
         props.setSubmit(true)
         fetch(`${SERVER_URL}/events/add`, {
             method: 'POST',
@@ -46,6 +54,7 @@ const AddEvent = (props) => {
             saveEvent={saveEvent}
             textButton='Добавить'
             heading='Добавить новое событие'
+            error={event.error}
         />
     )
 }

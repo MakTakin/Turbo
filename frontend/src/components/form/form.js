@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { StyledInput } from '../ui/input';
+import { StyledInput, StyledInputId } from '../ui/input';
 import { StyledSelect } from '../ui/select';
 import { FormButton } from '../ui/button';
-import EditEvent from '../editEvent/editEvent';
 
 const DivForm = styled.div`
     padding:20px;
@@ -23,10 +22,18 @@ const DivColumn = styled.div`
     flex-direction: column;
 `
 
+const ErrorMessage = styled.div`
+    color: red;
+    text-align: center;
+    font-weight: bold;  
+`
+
 const Form = (props) => {
+
     return (
         <DivForm>
             <Div>{props.heading}</Div>
+            <ErrorMessage error={props.error}>{props.error}</ErrorMessage>
             <form onSubmit={(e) => props.saveEvent(e)}>
                 <Div>
                     <DivColumn>
@@ -50,11 +57,13 @@ const Form = (props) => {
                         />
                     </DivColumn>
                     <DivColumn>
-                        <StyledInput
-                            value={props.event.user_id}
-                            name='user_id'
+                        <StyledInputId
+                            value={props.event.id}
+                            error={props.error}
+                            name='id'
                             placeholder='user id'
                             onChange={(e) => props.onChange(e)}
+                            disabled={props.disabled}
                         />
                         <StyledSelect
                             value={props.event.event_name}
@@ -69,8 +78,7 @@ const Form = (props) => {
                         <StyledInput
                             value={props.event.event_time}
                             name='event_time'
-                            placeholder='event time'
-
+                            placeholder='event time 2021/02/17 10:55'
                             onChange={(e) => props.onChange(e)}
                         />
                     </DivColumn>

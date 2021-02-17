@@ -1,9 +1,9 @@
-import AddUser from './components/addEvent/addEvent';
+import { useCallback, useEffect, useState } from 'react';
+import { SERVER_URL } from './settings/constants';
 import styled from 'styled-components'
 import TableEvents from './components/tableEvents/tableEvents';
-import { useCallback, useEffect, useState } from 'react';
 import EditEvent from './components/editEvent/editEvent';
-import { SERVER_URL } from './settings/constants';
+import AddEvent from './components/addEvent/addEvent';
 import { Loader } from './components/ui/loader';
 
 const Container = styled.div`
@@ -18,23 +18,6 @@ function App() {
     const [submit, setSubmit] = useState(false)
     const [events, setEvents] = useState([])
 
-
-    const onSelect = (eventId) => {
-        const allEvents = [...events]
-        console.log(allEvents)
-        const eventSelect = allEvents.map((event) => {
-            return event.logs.map((log) => log.id == eventId ? log.selected = true : log.selected = false)})
-        setEvents(allEvents)
-
-        console.log(eventId)
-        setSelectEvent(eventId)
-    }
-
-    const onChangeEvent = () => {
-        const editEvent = events.find(item => item.id == selectEvent)
-        setChangeEvent(editEvent)
-    }
-
     const doFetch = useCallback(() => {
         setLoading(true)
         fetch(`${SERVER_URL}/events`)
@@ -45,11 +28,9 @@ function App() {
             })
     }, [])
 
-    const onChange = (e) => {
-        const editEvent = { ...changeEvent }
-        editEvent[e.target.name] = e.target.value
-        setChangeEvent(editEvent)
-    }
+    useEffect(() => {
+        doFetch()
+    }, [doFetch, submit])
 
     const updateEvent = async (e) => {
         e.preventDefault()
@@ -62,9 +43,8 @@ function App() {
                 'Accept': 'application/json'
             }
         }).then(response => {
-                console.log(response)
+            console.log(response)
             if (response.ok) {
-                console.log('ooo')
                 setChangeEvent(null)
                 setSubmit(false)
             }
@@ -87,19 +67,46 @@ function App() {
             }
         })
     }
-    useEffect(() => {
-        doFetch()
-    }, [doFetch, submit])
 
+    const onChangeEvent = () => {
+        const editEvent = events.find(event => {
+            return event.logs.find(log => log.id == selectEvent)
+        })
+        const event_name = editEvent.logs[0].event.name
+        const event_time = editEvent.logs[0].event_time
+        setChangeEvent({ ...editEvent, event_name, event_time })
+    }
+
+    const onChange = (e) => {
+        const editEvent = { ...changeEvent }
+        editEvent[e.target.name] = e.target.value
+        setChangeEvent(editEvent)
+    }
+
+    const onSelect = (eventId) => {
+        const allEvents = [...events]
+        allEvents.map((event) => {
+            return event.logs.map((log) => {
+                return log.id == eventId ? log.selected = true : log.selected = false
+            })
+        })
+        setEvents(allEvents)
+        setSelectEvent(eventId)
+    }
+
+    const dateFormat = (data) => {
+        const event_time = new Date(data)
+        const time = event_time.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
+        return time
+    }
 
     if (loading) {
         return <Loader>...loading</Loader>
     }
 
-    console.log(events)
     return (
         <Container>
-            <AddUser
+            <AddEvent
                 submit={submit}
                 setSubmit={setSubmit}
                 onChange={onChange}
@@ -113,6 +120,7 @@ function App() {
                     deleteEvent={deleteEvent}
                     submit={submit}
                     setSubmit={setSubmit}
+                    dateFormat={dateFormat}
                 /> :
                 null
             }
@@ -122,6 +130,7 @@ function App() {
                     setChangeEvent={setChangeEvent}
                     onChange={onChange}
                     updateEvent={updateEvent}
+                    selectEvent={selectEvent}
                 /> :
                 null
             }

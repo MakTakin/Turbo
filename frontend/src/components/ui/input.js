@@ -10,3 +10,7 @@ export const StyledInput = styled.input`
         border: 2px solid #1ec1ea;
     }
 `
+
+export const StyledInputId = styled(StyledInput)`
+    border-color: ${props => props.error ? 'red' : '#694db4'}
+`

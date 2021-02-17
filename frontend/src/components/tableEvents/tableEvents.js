@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { StyledButton, TableButton } from '../ui/button';
+import { TableButton } from '../ui/button';
 
 const DivEvents = styled.div`
     padding:20px;
@@ -44,7 +44,7 @@ const Td = styled.td`
 
 const TableEvents = ({ ...props }) => {
     const TrTable = props.events.map((event) => {
-        return event.logs.map((log,i) => {
+        return event.logs.map((log, i) => {
             return (
                 <Tr
                     key={log.id}
@@ -67,13 +67,13 @@ const TableEvents = ({ ...props }) => {
                         {log.event.name}
                     </Td>
                     <Td>
-                        {log.event_time}
+                        {props.dateFormat(log.event_time)}
                     </Td>
                 </Tr>
             )
         })
-
     })
+
     return (
         <DivEvents>
             <Div>Таблица событий</Div>
