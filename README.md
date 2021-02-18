@@ -5,6 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 CRUD APP. Frontend React, Backend NodeJs + PostgresSQL
 
 you can start app:
+
 frontend: 
 
 `
@@ -17,4 +18,4 @@ backend:
 npm run server
 `
 
-![table](img.ing)
+![table](img.jpg)
